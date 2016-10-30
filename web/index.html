@@ -3,18 +3,119 @@
 <head>
   <meta charset=utf-8 />
   <title></title>
-  <script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <style>
     body { margin:0; padding:0; }
-    .map { position:absolute; top:0; bottom:0; width:75%; }
+    .map { position:absolute; top:0; bottom:0; width:100%; }
   </style>
 </head>
 <body>
-<div id='map-one' class='map'> </div>
+<div id='map' class='map'> </div>
 <script>
-L.mapbox.accessToken = 'pk.eyJ1Ijoic3VzaGFudHN1c2FuMzkiLCJhIjoiY2lsZTZ6OGl5MGVqb3Voa3BpY3JsZXBtcCJ9.IXO82Vle6cGxtTJYPBQQIw';
-  L.mapbox.map('map-one', 'mapbox.streets').setView([38.8929, -77.0252], 14);
+const setCentre = [54.1656406,-123.9534428];
+ const focus = 2;
+ var mymap = L.map('map').setView(setCentre, focus);
+    L.tileLayer("https://api.mapbox.com/styles/v1/sushantsusan39/ciuvmo82t00ds2io45ddvmgqe/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VzaGFudHN1c2FuMzkiLCJhIjoiY2lsZTZ6OGl5MGVqb3Voa3BpY3JsZXBtcCJ9.IXO82Vle6cGxtTJYPBQQIw", {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'sushantsusan39',
+    accessToken: 'pk.eyJ1Ijoic3VzaGFudHN1c2FuMzkiLCJhIjoiY2lsZTZ6OGl5MGVqb3Voa3BpY3JsZXBtcCJ9.IXO82Vle6cGxtTJYPBQQIw'
+}).addTo(mymap);
+
+
+// LONGITUDE -180 to + 180
+function generateRandomLong() {
+    var num = (Math.random()*180).toFixed(3);
+    var posorneg = Math.floor(Math.random());
+    if (posorneg == 0) {
+        num = num * -1;
+    }
+    return num;
+}
+// LATITUDE -90 to +90
+function generateRandomLat() {
+    var num = (Math.random()*90).toFixed(3);
+    var posorneg = Math.floor(Math.random() + 1);
+    if (posorneg == 0) {
+        num = num * -1;
+    }
+    return num;
+}
+
+var getJSON = function(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status == 200) {
+        resolve(xhr.response);
+      } else {
+        reject(status);
+      }
+    };
+    xhr.send();
+  });
+};
+var i = 0;
+
+function map_data(longitude, latitude, color){
+	var requestString = 'https://api.mapbox.com/v4/geocode/mapbox.places/' + longitude + ',' + latitude + '.json.json?access_token=pk.eyJ1Ijoic3VzaGFudHN1c2FuMzkiLCJhIjoiY2lsZTZ6OGl5MGVqb3Voa3BpY3JsZXBtcCJ9.IXO82Vle6cGxtTJYPBQQIw';
+    getJSON(requestString).then(function(data) {
+       if ( data.features && data.features.length > 0 && data.features[0].geometry.place_name !== "Antarctica"){
+       	var geti = new L.circle([latitude, longitude], 2000, {color: color})
+		mymap.addLayer(geti);
+       } else {
+       	i = 0;
+       }
+    }, function(status) { //error detection....
+        console.log('Went wrong');
+    });
+}
+
+
+for (var i = 0; i < 500; i++){
+	var latlong = [generateRandomLat(), generateRandomLong()];
+	setTimeout(map_data(latlong[1], latlong[0], 'red'), 500);
+}
+
+
+for (var i = 0; i < 200; i++){
+	var latlong = [generateRandomLat(), generateRandomLong()];
+	map_data(latlong[1], latlong[0], 'white');
+}
+
+
+for (var i = 0; i < 200; i++){
+	var latlong = [generateRandomLat(), generateRandomLong()];
+	map_data(latlong[1], latlong[0], 'green');
+}
+
+
+
+firstTest = new L.circle([38.8976045,-77.0046259], 800, { color: 'white'})
+secondTest = new L.circle([44.2563,-89.6385], 800, { color: 'red'})
+thirdTest = new L.circle([44.0407,-72.7093], 800, {color : 'blue'})
+
+fourthTest = new L.circle([44.0407,-72.7093], 800, {color : 'blue'})
+var gusai = [44.0407,-72.7093]
+for (var i = 0; i < 10; i++){
+	fourthTest = new L.circle([gusai[0], gusai[1]], 800, {color : 'blue'});
+	gusai[0] = gusai[0] + 1;
+	gusai[1] = gusai[0] + 0.89;
+
+}
+
+
+mymap.addLayer(secondTest);
+mymap.addLayer(thirdTest);
+mymap.addLayer(firstTest);
+
+
+
+
 </script>
 </body>
 </html>
