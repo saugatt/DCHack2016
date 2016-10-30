@@ -1,0 +1,22 @@
+{
+  "name": "dchack2016",
+  "version": "1.0.0",
+  "description": "Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saugatt/DCHack2016.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saugatt/DCHack2016/issues"
+  },
+  "homepage": "https://github.com/saugatt/DCHack2016#readme",
+  "dependencies": {
+    "twitter": "^1.4.0"
+  }
+}
